@@ -14,12 +14,22 @@ struct ContentView: View {
     @State var numberOfPeople = 2
     @State var tipPercentage = 2
     let tipPercentages = [0, 10, 15, 20, 25]
+    var grandTotal : Double {
+        let amount = Double(checkAmount) ?? 0
+        return tip + amount
+    }
+    var tip : Double {
+        let amount = Double(checkAmount) ?? 0
+        let percentage = Double(tipPercentages[tipPercentage])
+        return (amount / 100.0) * percentage
+    }
     var amountPerPerson : Double {
-        return 0.0
+        return grandTotal / Double(numberOfPeople + 2)
     }
     
     var body: some View {
-            NavigationView {
+        NavigationView {
+            VStack {
                 Form {
                     Section {
                         TextField("Check Amount", text: $checkAmount)
@@ -37,16 +47,29 @@ struct ContentView: View {
                                 Text("\(self.tipPercentages[$0])%")
                             }
                         }
-                    .pickerStyle(SegmentedPickerStyle())
+                        .pickerStyle(SegmentedPickerStyle())
                     }
-                    
-                    Text("$\(amountPerPerson, specifier: "%.2f")" )
                 }
                 .navigationBarTitle("Tips")
+                Section(header: Text("Summary").font(.largeTitle)) {
+                    VStack(alignment: .leading) {
+                        Text("Total: \(checkAmount)")
+                            .padding(.bottom)
+                        Text("Tip: (\(tipPercentages[tipPercentage])%): \(tip, specifier: "%.2f")")
+                            .padding(.bottom)
+                        Text("Grand Total: $\(grandTotal, specifier: "%.2f")")
+                            .padding(.bottom)
+                        Text("Number Of People: \(numberOfPeople + 2)")
+                            .padding(.bottom)
+                        Text("$\(amountPerPerson, specifier: "%.2f") per person" )
+                            .font(.largeTitle)
+                    }
+                }
+            .padding()
             }
-            .edgesIgnoringSafeArea(.all)
-            
+           
         }
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
