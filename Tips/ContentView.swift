@@ -29,29 +29,30 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
                 Form {
-                    Section {
-                        TextField("Check Amount", text: $checkAmount)
-                            .keyboardType(.decimalPad)
-                        Picker("Amount of People", selection: $numberOfPeople) {
-                            ForEach(2..<21) {
-                                Text("\($0) people")
+                    VStack(alignment: .leading, spacing: 20){
+                        
+                        Section {
+                            TextField("Check Amount", text: $checkAmount)
+                                .keyboardType(.decimalPad)
+                            Picker("Amount of People", selection: $numberOfPeople) {
+                                ForEach(2..<21) {
+                                    Text("\($0) people")
+                                }
                             }
+                        }
+                    
+                        Section(header: Text("What tip percentage do you want to apply?")) {
+                            Picker("Tip Percentage", selection: $tipPercentage) {
+                                ForEach(0..<tipPercentages.count) {
+                                    Text("\(self.tipPercentages[$0])%")
+                                }
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
                         }
                     }
                     
-                    Section(header: Text("What tip percentage do you want to apply?")) {
-                        Picker("Tip Percentage", selection: $tipPercentage) {
-                            ForEach(0..<tipPercentages.count) {
-                                Text("\(self.tipPercentages[$0])%")
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                    }
-                }
-                .navigationBarTitle("Tips")
-                Section(header: Text("Summary").font(.largeTitle)) {
+                    Section(header: Text("Summary").font(.headline)) {
                     VStack(alignment: .leading) {
                         Text("Total: \(checkAmount)")
                             .padding(.bottom)
@@ -63,12 +64,12 @@ struct ContentView: View {
                             .padding(.bottom)
                         Text("$\(amountPerPerson, specifier: "%.2f") per person" )
                             .font(.largeTitle)
+                        }
                     }
                 }
-            .padding()
-            }
-           
+                .navigationBarTitle("Tips")
         }
+    
     }
 }
 
